@@ -1,42 +1,53 @@
-var receptek = [];
-var vegrehajt = true;
-$(function(){
 
-  
+$(function(){
+    let receptek = [];
+    let vegrehajt = true;
+    let sorID = 0;
     $.ajax(
         {
-            url: "recept.json", 
-            success: function(result)
-            {
-               console.log(result);
-               receptek = result.receptkonyv;
+            url: "recept.json",
+            success: function (result) {
+                console.log(result);
+                //receptek = result.receptkonyv;
+                result.receptkonyv.forEach((value)=>{receptek.push(value)});
                console.log(receptek);
-               //$("article").append(receptek[0].nev);
                megjelenit();
             }
         }
       );
 
-  });
+    $("#bal").on("click",balra);
+    $("#jobb").on("click",jobbra);
+
+
 
   function megjelenit(){
     $("article").empty();
     $("article").append("<table>");
     $("article table").append("<tr><th>Név</th><th>Elkészítési idő</th><th>Kép</th><th>Leírás</th><th>Hozzávalók</th></tr>");
-    for (var i = 0; i < receptek.length; i++) {
+    /*for (let i = 0; i < receptek.length; i++) {
         $("article table").append("<tr></tr>");
-
-        for (var item in receptek[i]) {
+        console.log("itt");
+        for (let item in receptek[i]) {
             $("article table tr").eq(i + 1).append("<td>" + receptek[i][item] + "</td>");
         }
  
-    }
-
-    for (var i = 0; i <= $("article table tr").length; i++) {
+    }*/
+      receptek.forEach(
+          (value, index) => {
+              $("article table").append("<tr></tr>");
+              console.log(value)
+              for (let item in value) {
+                  $("article table tr").eq(index + 1).append("<td>" + value[item] + "</td>");
+              }
+              
+          }
+    );
+    for (let i = 0; i <= $("article table tr").length; i++) {
         $("article table tr").eq(i).attr('id', i);
     }
 
-    for (var i = 0; i <= $("article table tr").length; i++) {
+    for (let i = 0; i <= $("article table tr").length; i++) {
         $("article table tr th").eq(i).attr('fejlecid', i);
     }
 
@@ -52,35 +63,36 @@ $(function(){
   }
 
   function kattint(){
-    var azon = $(this).attr("id");
+        const azon = $(this).attr("id");
+        sorID = Number($(this).attr("id"));
+        console.log(sorID);
     if (azon != 0){
         
         $("#kep").html("<img src='"+receptek[azon -1].kep+"' alt='kep'>");
         $("#kep").append("<h2>");
-        $("#kep h2").append(receptek[azon -1].nev);
+        $("#kep h2").append(receptek[azon - 1].nev);
 
         
+
         $("#kep").append("<ul>");
         //for (var i = 0; i <= receptek[azon -1].hozzavalok.length; i++) {
-            for (var item in receptek[azon-1].hozzavalok) {
-                //console.log(receptek[azon-1].hozzavalok[item]);
-                for (var item2 in receptek[azon-1].hozzavalok[item]) {
-                    console.log(item2);
-                    console.log(receptek[azon-1].hozzavalok[item])
-                    console.log(receptek[azon-1].hozzavalok[item].item2);
+            for (let item in receptek[azon-1].hozzavalok) {
+
+                for (let item2 in receptek[azon - 1].hozzavalok[item]) {
+                    //console.log(item2);
+                    //console.log(receptek[azon-1].hozzavalok[item])
+                    //console.log(receptek[azon-1].hozzavalok[item].item2);
                     $("#kep ul").append("<li>" + item2 + "</li>");
                 }
                 
             }
-
         //}
-        
     }
   }
 
   function rendez(){
-    
-    var azon2 = $(this).attr("fejlecid");
+    const azon2 = $(this).attr("fejlecid");
+
     //név
     if (azon2 === "0") {
         if (vegrehajt === true) {
@@ -151,8 +163,17 @@ $(function(){
   }
 
   function hatterFel(){
-      $(this).addClass("hatter");
+    $(this).addClass("hatter");
   }
   function hatterLe(){
     $(this).removeClass("hatter");
 }
+
+function balra() {
+    
+}
+function jobbra() {
+    
+}
+
+});
